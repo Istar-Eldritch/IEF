@@ -109,7 +109,7 @@ class IE_CmpStr: IE_Cmp<string>
 class IE_SearchMatch<Class T>
 {
 	T m_value;
-	IE_Cmp<T> m_comparator;
+	ref IE_Cmp<T> m_comparator;
 
 	void IE_SearchMatch(T value, IE_Cmp<T> comparator)
 	{
@@ -139,27 +139,27 @@ class IE_ArrayUtils<Class T>
 {
     static IE_BinSearchResult BinarySearch(array<T> arr, IE_SearchMatch<T> cmp)
 	{
-		return BinarySearch(arr, cmp, 0, arr.Count());
+		return BinarySearch(arr, cmp, 0, arr.Count() - 1);
 	}
 	
 	private static IE_BinSearchResult BinarySearch(array<T> arr, IE_SearchMatch<T> cmp, int low, int high)
 	{
 		// Repeat until the pointers low and high meet each other
 		int idx = 0;
-		while (low < high) {
+		while (low <= high) {
 			idx = low + (high - low) / 2;
 			IE_CmpRes checkRes = cmp.check(arr[idx]);
 			if (checkRes == IE_CmpRes.Eq)
 			{
 				return new IE_BinSearchResult(true, idx);
 			}
-			if (checkRes == IE_CmpRes.Lt)
+			if (checkRes == IE_CmpRes.Gt)
 			{
 			  	low = idx + 1;
 			}
 			else
 			{
-			  	high = idx;
+			  	high = idx - 1;
 			}
 		}
 		
@@ -241,6 +241,8 @@ class TestArrayUtils
 		EqEmptyArrays();
 		EqArrays();
 		NqArrays();
+		BinarySearchEmpty();
+		BinarySearch();
 		SortEmpty();
 		SortNonEmptyOdd();
 		SortNonEmptyEven();
@@ -275,6 +277,33 @@ class TestArrayUtils
 		IE_CmpArrayInt cmpArray = new IE_CmpArrayInt;
 		IE_CmpRes res = cmpArray.cmp(arr1, arr2);
 		IE_Assert(res != IE_CmpRes.Eq, "[ERROR] Expected arrays to be non equal");
+	}
+	
+	static void BinarySearchEmpty()
+	{
+		array<int> arr = {};
+		auto search =  new IE_SearchMatch<int>(2, new IE_CmpInt);
+		IE_BinSearchResult res = IE_ArrayUtils<int>.BinarySearch(arr, search);
+		IE_Assert(!res.success, "[ERROR] Expected search on empty array to fail");
+		IE_Assert(res.idx == 0, "[ERROR] Expected entry point on empty array to be 0");
+	}
+	
+	static void BinarySearch()
+	{
+		array<int> arr = {1, 2, 3, 4, 5, 6};
+		auto search =  new IE_SearchMatch<int>(2, new IE_CmpInt);
+		IE_BinSearchResult res = IE_ArrayUtils<int>.BinarySearch(arr, search);
+		IE_Assert(res.success, "[ERROR] Expected search to succeed");
+		IE_Assert(res.idx == 1, "[ERROR] Expected entry point on empty array to be 1 but was " + res.idx);
+	}
+
+	static void BinarySearchNoMatch()
+	{
+		array<int> arr = {1, 2, 3, 5, 6};
+		auto search =  new IE_SearchMatch<int>(4, new IE_CmpInt);
+		IE_BinSearchResult res = IE_ArrayUtils<int>.BinarySearch(arr, search);
+		IE_Assert(!res.success, "[ERROR] Expected search to succeed");
+		IE_Assert(res.idx == 3, "[ERROR] Expected entry point on empty array to be 1 but was " + res.idx);
 	}
 	
 	static void SortEmpty()
