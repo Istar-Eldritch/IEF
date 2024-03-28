@@ -1,0 +1,13 @@
+ImageWidgetClass ie_framework_blocked {
+ position 10 10
+ size 100 100
+ hexactpos 1
+ vexactpos 1
+ hexactsize 1
+ vexactsize 1
+ imageTexture "{EB15A64881430D36}IE/Framework/data/images/blocked_icon.edds"
+ mode blend
+ "src alpha" 1
+ "clamp mode" wrap
+ "stretch mode" stretch_w_h
+}

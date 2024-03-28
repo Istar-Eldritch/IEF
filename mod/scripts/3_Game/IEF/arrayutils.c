@@ -230,7 +230,7 @@ class IE_ArrayUtils<Class T>
 	}
 }
 
-#define TEST_ARRAY_UTILS
+// #define TEST_ARRAY_UTILS
 
 #ifdef TEST_ARRAY_UTILS
 class TestArrayUtils

@@ -1,0 +1,16 @@
+MetaFileClass {
+ Name "{EB15A64881430D36}IE/Framework/data/images/blocked_icon.png"
+ Author "desktop-c2tqomk"
+ ChangeDate -2044940164
+ Configurations {
+  PNGResourceClass PC {
+   SourceFile "blocked_icon.png"
+  }
+  PNGResourceClass XBOX_ONE : PC {
+  }
+  PNGResourceClass PS4 : PC {
+  }
+  PNGResourceClass LINUX : PC {
+  }
+ }
+}
