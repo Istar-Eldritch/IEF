@@ -121,7 +121,7 @@ class LiquidRegistry
             }
             else
             {
-                Print("[IEF] ERROR! Non recognised liquid config version.");
+                IEF_LOG.Error("Non recognised liquid config version.");
             }
         }
         else
@@ -145,14 +145,14 @@ class LiquidRegistry
         {
 			if (!override_existing)
 			{
-            	Print("[IEF] Trying to register " + liquidDetails.GetName(null) + " but " + existing.GetName(null) + " was already registered");
+            	IEF_LOG.Info("Trying to register " + liquidDetails.GetName(null) + " but " + existing.GetName(null) + " was already registered");
             	return;
 			}
 			m_liquids.Remove(liquidType);
         }
 
         m_liquids.Insert(liquidType, liquidDetails);
-		Print("[IEF] Registered Liquid: " + liquidType + " - " + liquidDetails.GetName(null));
+		IEF_LOG.Info("Registered Liquid: " + liquidType + " - " + liquidDetails.GetName(null));
     }
 
     LiquidDetailsBase GetLiquid(int liquidType)
