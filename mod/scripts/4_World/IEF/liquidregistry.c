@@ -1,6 +1,6 @@
 
 ///
-class LiquidDetailsBase
+class IE_LiquidDetailsBase
 {
     // Note that item could be null in some cases
     string GetName(ItemBase item)
@@ -14,12 +14,12 @@ class LiquidDetailsBase
     }
 }
 
-class SimpleLiquidDetails : LiquidDetailsBase
+class IE_SimpleLiquidDetails : IE_LiquidDetailsBase
 {
     string name;
     int color;
 
-    void SimpleLiquidDetails(string _name, int _color)
+    void IE_SimpleLiquidDetails(string _name, int _color)
     {
         name = _name;
         color = _color;
@@ -37,36 +37,36 @@ class SimpleLiquidDetails : LiquidDetailsBase
 }
 
 
-class LiquidConfig
+class IE_LiquidConfig
 {
     int id;
     string name;
     int color;
 }
 
-class LiquidRegistryConfig
+class IE_LiquidRegistryConfig
 {
     int version = 1;
-    ref array<ref LiquidConfig> liquids = new array<ref LiquidConfig>;
+    ref array<ref IE_LiquidConfig> liquids = new array<ref IE_LiquidConfig>;
 }
 
-class LiquidRegistryVersion
+class IE_LiquidRegistryVersion
 {
     int version;
 }
 
-class LiquidRegistry
+class IE_LiquidRegistry
 {
     static private const string DIR_PATH = "$profile:IE";
     static private const string LIQUID_CONFIG_PATH = DIR_PATH + "\\Liquids.json";
 
-    ref map<int, ref LiquidDetailsBase> m_liquids;
+    ref map<int, ref IE_LiquidDetailsBase> m_liquids;
 	
-	ref LiquidRegistryConfig m_config;
+	ref IE_LiquidRegistryConfig m_config;
 
-    void LiquidRegistry()
+    void IE_LiquidRegistry()
     {
-        m_liquids = new ref map<int, ref LiquidDetailsBase>;
+        m_liquids = new ref map<int, ref IE_LiquidDetailsBase>;
 
         // Vanilla liquids
         RegisterLiquid(LIQUID_WATER, "#inv_inspect_water", Colors.COLOR_LIQUID);
@@ -100,6 +100,7 @@ class LiquidRegistry
 		if (GetGame().IsServer())
         	Load_Config();
     }
+
     void Load_Config()
     {
         if (!FileExist(DIR_PATH))
@@ -109,12 +110,12 @@ class LiquidRegistry
 
         if (FileExist(LIQUID_CONFIG_PATH))
         { // If config exist load File
-            LiquidRegistryVersion v;
-            JsonFileLoader<LiquidRegistryVersion>.JsonLoadFile(LIQUID_CONFIG_PATH, v);
+            IE_LiquidRegistryVersion v;
+            JsonFileLoader<IE_LiquidRegistryVersion>.JsonLoadFile(LIQUID_CONFIG_PATH, v);
             if (v.version == 1)
             {
-                JsonFileLoader<LiquidRegistryConfig>.JsonLoadFile(LIQUID_CONFIG_PATH, m_config);
-                foreach(LiquidConfig liquidConfig: m_config.liquids)
+                JsonFileLoader<IE_LiquidRegistryConfig>.JsonLoadFile(LIQUID_CONFIG_PATH, m_config);
+                foreach(IE_LiquidConfig liquidConfig: m_config.liquids)
                 {
                     RegisterLiquid(liquidConfig.id, liquidConfig.name, liquidConfig.color, true);
                 }
@@ -126,19 +127,19 @@ class LiquidRegistry
         }
         else
         {
-			m_config = new LiquidRegistryConfig;
-            JsonFileLoader<LiquidRegistryConfig>.JsonSaveFile(LIQUID_CONFIG_PATH, m_config);
+			m_config = new IE_LiquidRegistryConfig;
+            JsonFileLoader<IE_LiquidRegistryConfig>.JsonSaveFile(LIQUID_CONFIG_PATH, m_config);
         }
     }
 
     // Other custom liquids can be registered.
     void RegisterLiquid(int liquidType, string name, int color, bool override_existing = false)
     {
-       RegisterLiquid(liquidType, new SimpleLiquidDetails(name, color), override_existing);
+       RegisterLiquid(liquidType, new IE_SimpleLiquidDetails(name, color), override_existing);
     }
 
     // Other custom liquids can be registered.
-    void RegisterLiquid(int liquidType, LiquidDetailsBase liquidDetails, bool override_existing = false)
+    void RegisterLiquid(int liquidType, IE_LiquidDetailsBase liquidDetails, bool override_existing = false)
     {
         auto existing = m_liquids.Get(liquidType);
         if (existing)
@@ -155,43 +156,36 @@ class LiquidRegistry
 		IEF_LOG.Info("Registered Liquid: " + liquidType + " - " + liquidDetails.GetName(null));
     }
 
-    LiquidDetailsBase GetLiquid(int liquidType)
+    IE_LiquidDetailsBase GetLiquid(int liquidType)
     {
         return m_liquids.Get(liquidType);
     }
 
-    void RequestLiquidConfig()
+    void SendLiquidConfig(PlayerIdentity identity)
     {
-        GetRPCManager().SendRPC("IEF", "RequestLiquidConfigRPC", null, true);
+		GetRPCManager().SendRPC("IEF", "UpdateLiquidConfigRPC", new Param1<IE_LiquidRegistryConfig>(m_config), true, identity);
     }
 
-    void RequestLiquidConfigRPC(CallType type, ref ParamsReadContext ctx, ref PlayerIdentity sender, ref Object target)
+    void UpdateLiquidConfigRPC(CallType type, ref ParamsReadContext ctx, ref PlayerIdentity sender, ref Object target)
     {
-        Param1<LiquidRegistryConfig> data;
+        Param1<IE_LiquidRegistryConfig> data;
         if (ctx.Read(data))
         {
             m_config = data.param1;
-            foreach(LiquidConfig liquidConfig: m_config.liquids)
+            foreach(IE_LiquidConfig liquidConfig: m_config.liquids)
             {
                 RegisterLiquid(liquidConfig.id, liquidConfig.name, liquidConfig.color, true);
             }
         }
-		else
-		{
-			if (GetGame().IsServer())
-			{
-				GetRPCManager().SendRPC("IEF", "RequestLiquidConfigRPC", new Param1<LiquidRegistryConfig>(m_config), true);
-			}
-		}
     }
 }
 
-static ref LiquidRegistry g_LiquidRegistry;
-static LiquidRegistry GetLiquidRegistry()
+static ref IE_LiquidRegistry g_LiquidRegistry;
+static IE_LiquidRegistry IE_GetLiquidRegistry()
 {
     if (!g_LiquidRegistry)
     {
-        g_LiquidRegistry = new LiquidRegistry();
+        g_LiquidRegistry = new IE_LiquidRegistry();
     }
 
     return g_LiquidRegistry;

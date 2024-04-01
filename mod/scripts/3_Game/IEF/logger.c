@@ -1,6 +1,6 @@
 ref IE_Log IEF_LOG;
 
-enum LogLevel
+enum IE_LogLevel
 {
     TRACE,
     DEBUG,
@@ -23,11 +23,11 @@ class IE_StdOutput: IE_LogOutput
 
 class IE_Log
 {
-    LogLevel m_level;
+    IE_LogLevel m_level;
     string m_name;
     ref IE_LogOutput m_output;
 
-    void IE_Log(string name, LogLevel level, IE_LogOutput output = null)
+    void IE_Log(string name, IE_LogLevel level = IE_LogLevel.INFO, IE_LogOutput output = null)
     {
         m_name = name;
         m_level = level;
@@ -38,9 +38,14 @@ class IE_Log
         }
     }
 
+    void SetLogLevel(IE_LogLevel level)
+    {
+        m_level = level;
+    }
+
     void Trace(string msg)
     {
-        if (m_level <= LogLevel.TRACE)
+        if (m_level <= IE_LogLevel.TRACE)
         {
             m_output.write("[" + m_name + "] [TRACE] " + msg);
         }
@@ -48,7 +53,7 @@ class IE_Log
 
     void Debug(string msg)
     {
-        if (m_level <= LogLevel.DEBUG)
+        if (m_level <= IE_LogLevel.DEBUG)
         {
             m_output.write("[" + m_name + "] [DEBUG] " + msg);
         }
@@ -56,7 +61,7 @@ class IE_Log
 
     void Info(string msg)
     {
-        if (m_level <= LogLevel.INFO)
+        if (m_level <= IE_LogLevel.INFO)
         {
             m_output.write("[" + m_name + "] [INFO] " + msg);
         }
@@ -64,7 +69,7 @@ class IE_Log
 
     void Warn(string msg)
     {
-        if (m_level <= LogLevel.WARN)
+        if (m_level <= IE_LogLevel.WARN)
         {
             m_output.write("[" + m_name + "] [WARN] " + msg);
         }
@@ -72,7 +77,7 @@ class IE_Log
 
     void Error(string msg)
     {
-        if (m_level <= LogLevel.ERROR)
+        if (m_level <= IE_LogLevel.ERROR)
         {
             m_output.write("[" + m_name + "] [ERROR] " + msg);
         }

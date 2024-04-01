@@ -27,9 +27,9 @@ modded class InspectMenuNew
 		{
 			int liquid_type = item_base.GetLiquidType();
 
-			LiquidRegistry registry = GetLiquidRegistry();
+			IE_LiquidRegistry registry = IE_GetLiquidRegistry();
 
-			LiquidDetailsBase liquid = registry.GetLiquid(liquid_type);
+			IE_LiquidDetailsBase liquid = registry.GetLiquid(liquid_type);
 			if (liquid)
 			{
 				WidgetTrySetText(root_widget, "ItemLiquidTypeWidget", liquid.GetName(item_base), liquid.GetColor(item_base));
