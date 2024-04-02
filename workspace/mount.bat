@@ -1,23 +1,30 @@
+call vars.bat
 
-set "SCRIPT_DIR=%cd%"
-set "DAYZ_PATH=%ProgramFiles(x86)%\Steam\steamapps\common\DayZ\"
-set "WORKDRIVE_PATH=%ProgramFiles(x86)%\Steam\steamapps\common\DayZ Tools\Bin\WorkDrive"
+start /wait /D "%WORKDRIVE_PATH%" WorkDrive.exe /Mount P "%DAYZ_DATA%"
 
-start /wait /D "%WORKDRIVE_PATH%" WorkDrive.exe /Mount P "%UserProfile%\Documents\DayZData"
+setlocal enabledelayedexpansion
 
-mkdir "%DAYZ_PATH%\IE"
-mklink /J "%DAYZ_PATH%\IE\Framework" "%SCRIPT_DIR%\..\mod"
-mkdir "P:\IE"
-mklink /J "P:\IE\Framework" "%SCRIPT_DIR%\..\mod"
+FOR /D %%i IN (..\modules\*) DO (
+    set filename=%%~ni
 
-mklink /J "P:\Mods" "%UserProfile%\Documents\Mods"
+    mklink /J "!DAYZ_PATH!\!filename!" "%%i"
+    mklink /J "P:\!filename!" "%%i"
+)
+
+endlocal
+
+mklink /J "P:\Mods" "%BUILT_MODS%"
 
 @REM Community Framework
-
-mklink /J "%DAYZ_PATH%JM" "%UserProfile%\Documents\DZ\CommunityFramework\JM"
-mklink /J "P:\JM" "%UserProfile%\Documents\DZ\CommunityFramework\JM"
+if not exist "%CODE_DEPENDENCIES%\DayZ-CommunityFramework" (
+    git clone git@github.com:Arkensor/DayZ-CommunityFramework.git "%CODE_DEPENDENCIES%\DayZ-CommunityFramework"
+)
+mklink /J "%DAYZ_PATH%JM" "%CODE_DEPENDENCIES%\DayZ-CommunityFramework\JM"
+mklink /J "P:\JM" "%CODE_DEPENDENCIES%\DayZ-CommunityFramework\JM"
 
 @REM COT
-
-mklink /J "%DAYZ_PATH%JM\COT" "%UserProfile%\Documents\DZ\DayZ-CommunityOnlineTools\JM\COT"
-mklink /J "P:\JM\COT" "%UserProfile%\Documents\DZ\DayZ-CommunityOnlineTools\JM\COT"
+if not exist "%CODE_DEPENDENCIES%\DayZ-CommunityOnlineTools" (
+    git clone git@github.com:Jacob-Mango/DayZ-CommunityOnlineTools.git "%CODE_DEPENDENCIES%\DayZ-CommunityOnlineTools"
+)
+mklink /J "%DAYZ_PATH%JM\COT" "%CODE_DEPENDENCIES%\DayZ-CommunityOnlineTools\JM\COT"
+mklink /J "P:\JM\COT" "%CODE_DEPENDENCIES%\DayZ-CommunityOnlineTools\JM\COT"

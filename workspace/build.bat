@@ -1,16 +1,16 @@
+call vars.bat
 
-set "SCRIPT_DIR=%cd%"
-set "DAYZ_PATH=%ProgramFiles(x86)%\Steam\steamapps\common\DayZ\"
-set "ADDON_BUILDER_PATH=%ProgramFiles(x86)%\Steam\steamapps\common\DayZ Tools\Bin\AddonBuilder\AddonBuilder.exe"
+rmdir /s /q "%BUILD_PATH%"
+md "%BUILD_PATH%/addons"
+xcopy /s /i "%SCRIPT_DIR%/../keys" "%BUILD_PATH%/keys"
+copy "%SCRIPT_DIR%/../LICENSE" "%BUILD_PATH%/LICENSE"
+copy "%SCRIPT_DIR%/../README.md" "%BUILD_PATH%/README.md"
+copy "%SCRIPT_DIR%/../mod.cpp" "%BUILD_PATH%/mod.cpp"
 
-set "MOD_PATH=P:\Mods\@IEF"
-rmdir /s /q "%MOD_PATH%"
-md "%MOD_PATH%/addons"
-xcopy /s /i "%SCRIPT_DIR%/../keys" "%MOD_PATH%/keys"
-copy "%SCRIPT_DIR%/../LICENSE" "%MOD_PATH%/LICENSE"
-copy "%SCRIPT_DIR%/../README.md" "%MOD_PATH%/README.md"
-copy "%SCRIPT_DIR%/../mod.cpp" "%MOD_PATH%/mod.cpp"
+setlocal enabledelayedexpansion
 
-set "includes=%SCRIPT_DIR%\buildincludes"
+FOR /D %%i IN (..\modules\*) DO (
+    pboProject.exe +M=%BUILD_PATH% +P  +H +E=dayz +K=%SIGN_KEY% +C P:\%%~ni
+)
 
-"%ADDON_BUILDER_PATH%" "P:\IE\Framework" "%MOD_PATH%\addons" -project="P:" -prefix="IE/Framework" -include=%includes% -clear -binarizeFullLogs -sign="%UserProfile%\Documents\Keys\IstarEldritch.biprivatekey"
+endlocal

@@ -1,4 +1,11 @@
-set "SCRIPT_DIR=%cd%"
-set "DAYZ_PATH=%ProgramFiles(x86)%\Steam\steamapps\common\DayZ\"
+call vars.bat
 
-start /D "%DAYZ_PATH%" DayZDiag_x64.exe "-mod=P:\Mods\@CF;P:\Mods\@Community-Online-Tools;P:\Mods\@IEF" "-name=Istar Eldritch" -filePatching -connect=127.0.0.1 -port=2302 -window
+set "mod=P:\Mods\@CF;P:\Mods\@DayZ-Community-Online-Tools"
+
+FOR /D %%i IN (..\modules\*) DO (
+    set filename=%%~ni
+    set "mod=!mod!;P:\Mods\@!filename!"
+)
+
+start /D "%DAYZ_PATH%" DayZDiag_x64.exe "-mod=%mod%"^
+ "-name=Istar Eldritch" -filePatching -connect=127.0.0.1 -port=2302 -window
