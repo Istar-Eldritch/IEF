@@ -22,8 +22,8 @@ modded class ItemActionsWidget
         {
             Widget existingIcon = m_Root.FindAnyWidget(action + "_btn_icon");
             Widget blockedIconWidget = ImageWidget.Cast(GetGame().GetWorkspace().CreateWidgets(layout, existingIcon.GetParent()));
-			blockedIconWidget.SetName(action + "_" + name);
-			blockedIconWidget.Show(false);
+            blockedIconWidget.SetName(action + "_" + name);
+            blockedIconWidget.Show(false);
 
             float x;
             float y;
@@ -43,10 +43,15 @@ modded class ItemActionsWidget
 
         if (action && (!action.HasTarget() || (m_Player && m_Player.GetCommand_Vehicle())))
         {
-	        TextWidget actionName = TextWidget.Cast(widget.FindAnyWidget(descWidget));
-	        Widget actionIcon = widget.FindAnyWidget(actionWidget + "_btn_icon");
-			string blockedIconId = action.GetBlockedIcon(m_Player, null, ItemBase.Cast(m_EntityInHands));
-			Widget blockedIconWidget = actionIcon.GetParent().FindAnyWidget(actionWidget + "_" + blockedIconId);
+            TextWidget actionName = TextWidget.Cast(widget.FindAnyWidget(descWidget));
+            Widget actionIcon = widget.FindAnyWidget(actionWidget + "_btn_icon");
+            string blockedIconId = action.GetBlockedIcon(m_Player, null, ItemBase.Cast(m_EntityInHands));
+            Widget blockedIconWidget = actionIcon.GetParent().FindAnyWidget(actionWidget + "_" + blockedIconId);
+
+            foreach (Widget icon : m_BlockingIcons)
+            {
+                icon.Show(false);
+            }
 
             bool isBlocked = action.IsBlocked(m_Player, null, ItemBase.Cast(m_EntityInHands));
 
@@ -55,10 +60,6 @@ modded class ItemActionsWidget
                 descText = descText + " " + "#action_target_cursor_hold";
                 actionName.SetText(descText);
                 actionIcon.Show(true);
-                foreach (Widget icon : m_BlockingIcons)
-                {
-                    icon.Show(false);
-                }
             }
             else
             {
@@ -66,7 +67,7 @@ modded class ItemActionsWidget
                 {
                     action.GetBlockedText(m_Player, null, ItemBase.Cast(m_EntityInHands));
                     actionName.SetText(action.GetBlockedText(m_Player, null, ItemBase.Cast(m_EntityInHands)));
-					actionIcon.Show(false);
+                    actionIcon.Show(false);
                     if (blockedIconWidget)
                     {
                         blockedIconWidget.Show(true);
@@ -76,10 +77,6 @@ modded class ItemActionsWidget
                 {
                     actionIcon.Show(true);
                     actionName.SetText(descText);
-					if (blockedIconWidget)
-					{
-						blockedIconWidget.Show(false);
-					}
                 }
             }
 

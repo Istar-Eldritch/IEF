@@ -61,8 +61,8 @@ class IE_LiquidRegistry
     static private const string LIQUID_CONFIG_PATH = DIR_PATH + "\\Liquids.json";
 
     ref map<int, ref IE_LiquidDetailsBase> m_liquids;
-	
-	ref IE_LiquidRegistryConfig m_config;
+
+    ref IE_LiquidRegistryConfig m_config;
 
     void IE_LiquidRegistry()
     {
@@ -79,7 +79,7 @@ class IE_LiquidRegistry
         RegisterLiquid(LIQUID_SALINE, "#inv_inspect_saline", Colors.COLOR_LIQUID);
 
         // Rag liquid framework introduced
-        #ifdef rag_liquid_framework
+#ifdef rag_liquid_framework
         RegisterLiquid(LIQUID_MILK, "MILK", Colors.MILKLIQUID);
         RegisterLiquid(LIQUID_HONEY, "HONEY", Colors.HONEYLIQUID);
         RegisterLiquid(LIQUID_HONEYWINE, "HONEYWINE", Colors.HONEYWINELIQUID);
@@ -95,10 +95,10 @@ class IE_LiquidRegistry
         RegisterLiquid(LIQUID_POISON, "POISON", Colors.POISONLIQUID);
         RegisterLiquid(LIQUID_MILKCOFFEE, "MILKCOFFEE", Colors.MILKCOFFEELIQUID);
         RegisterLiquid(LIQUID_ANTIVENOM, "ANTIVENOM", Colors.ANTIVENOMLIQUID);
-        #endif
+#endif
 
-		if (GetGame().IsServer())
-        	Load_Config();
+        if (GetGame().IsServer())
+            Load_Config();
     }
 
     void Load_Config()
@@ -115,7 +115,7 @@ class IE_LiquidRegistry
             if (v.version == 1)
             {
                 JsonFileLoader<IE_LiquidRegistryConfig>.JsonLoadFile(LIQUID_CONFIG_PATH, m_config);
-                foreach(IE_LiquidConfig liquidConfig: m_config.liquids)
+                foreach (IE_LiquidConfig liquidConfig: m_config.liquids)
                 {
                     RegisterLiquid(liquidConfig.id, liquidConfig.name, liquidConfig.color, true);
                 }
@@ -127,7 +127,7 @@ class IE_LiquidRegistry
         }
         else
         {
-			m_config = new IE_LiquidRegistryConfig;
+            m_config = new IE_LiquidRegistryConfig;
             JsonFileLoader<IE_LiquidRegistryConfig>.JsonSaveFile(LIQUID_CONFIG_PATH, m_config);
         }
     }
@@ -135,7 +135,7 @@ class IE_LiquidRegistry
     // Other custom liquids can be registered.
     void RegisterLiquid(int liquidType, string name, int color, bool override_existing = false)
     {
-       RegisterLiquid(liquidType, new IE_SimpleLiquidDetails(name, color), override_existing);
+        RegisterLiquid(liquidType, new IE_SimpleLiquidDetails(name, color), override_existing);
     }
 
     // Other custom liquids can be registered.
@@ -144,16 +144,16 @@ class IE_LiquidRegistry
         auto existing = m_liquids.Get(liquidType);
         if (existing)
         {
-			if (!override_existing)
-			{
-            	IEF_LOG.Info("Trying to register " + liquidDetails.GetName(null) + " but " + existing.GetName(null) + " was already registered");
-            	return;
-			}
-			m_liquids.Remove(liquidType);
+            if (!override_existing)
+            {
+                IEF_LOG.Info("Trying to register " + liquidDetails.GetName(null) + " but " + existing.GetName(null) + " was already registered");
+                return;
+            }
+            m_liquids.Remove(liquidType);
         }
 
         m_liquids.Insert(liquidType, liquidDetails);
-		IEF_LOG.Info("Registered Liquid: " + liquidType + " - " + liquidDetails.GetName(null));
+        IEF_LOG.Info("Registered Liquid: " + liquidType + " - " + liquidDetails.GetName(null));
     }
 
     IE_LiquidDetailsBase GetLiquid(int liquidType)
@@ -163,7 +163,7 @@ class IE_LiquidRegistry
 
     void SendLiquidConfig(PlayerIdentity identity)
     {
-		GetRPCManager().SendRPC("IEF", "UpdateLiquidConfigRPC", new Param1<IE_LiquidRegistryConfig>(m_config), true, identity);
+        GetRPCManager().SendRPC("IEF", "UpdateLiquidConfigRPC", new Param1<IE_LiquidRegistryConfig>(m_config), true, identity);
     }
 
     void UpdateLiquidConfigRPC(CallType type, ref ParamsReadContext ctx, ref PlayerIdentity sender, ref Object target)
@@ -172,7 +172,7 @@ class IE_LiquidRegistry
         if (ctx.Read(data))
         {
             m_config = data.param1;
-            foreach(IE_LiquidConfig liquidConfig: m_config.liquids)
+            foreach (IE_LiquidConfig liquidConfig: m_config.liquids)
             {
                 RegisterLiquid(liquidConfig.id, liquidConfig.name, liquidConfig.color, true);
             }

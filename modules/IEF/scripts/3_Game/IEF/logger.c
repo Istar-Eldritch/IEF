@@ -14,9 +14,10 @@ class IE_LogOutput
     void write(string msg);
 }
 
-class IE_StdOutput: IE_LogOutput
+class IE_StdOutput : IE_LogOutput
 {
-    override void write(string msg) {
+    override void write(string msg)
+    {
         Print("" + msg);
     }
 }

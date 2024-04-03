@@ -20,12 +20,12 @@ modded class ActionTargetsCursor
 
     protected void CreateBlockingIcons(string layout, string name)
     {
-		foreach (string action : m_ActionTypes)
+        foreach (string action : m_ActionTypes)
         {
             Widget existingIcon = m_Root.FindAnyWidget(action + "_btn_icon");
             Widget blockedIconWidget = ImageWidget.Cast(GetGame().GetWorkspace().CreateWidgets(layout, existingIcon.GetParent()));
-			blockedIconWidget.SetName(action + "_" +  name);
-			blockedIconWidget.Show(false);
+            blockedIconWidget.SetName(action + "_" + name);
+            blockedIconWidget.Show(false);
 
             float x;
             float y;
@@ -39,32 +39,33 @@ modded class ActionTargetsCursor
         }
     }
 
-	override protected void SetActionWidget(ActionBase action, string descText, string actionWidget, string descWidget)
-	{
-		Widget widget = m_Root.FindAnyWidget(actionWidget);
-		
-		if (action)
-		{
-			if (action.HasTarget() && m_AM.GetActionState() < 1) // targeted & action not performing
-			{
+    override protected void SetActionWidget(ActionBase action, string descText, string actionWidget, string descWidget)
+    {
+        Widget widget = m_Root.FindAnyWidget(actionWidget);
+
+        if (action)
+        {
+            if (action.HasTarget() && m_AM.GetActionState() < 1) // targeted & action not performing
+            {
                 TextWidget actionName = TextWidget.Cast(widget.FindAnyWidget(descWidget));
                 Widget actionIcon = widget.FindAnyWidget(actionWidget + "_btn_icon");
                 string blockedIconId = action.GetBlockedIcon(m_Player, m_Target, m_Player.GetItemInHands());
-                Widget blockedIconWidget = actionIcon.GetParent().FindAnyWidget(actionWidget + "_" + blockedIconId); 
+                Widget blockedIconWidget = actionIcon.GetParent().FindAnyWidget(actionWidget + "_" + blockedIconId);
+
+                foreach (Widget icon : m_BlockingIcons)
+                {
+                    icon.Show(false);
+                }
 
                 bool isBlocked = action.IsBlocked(m_Player, m_Target, m_Player.GetItemInHands());
-				if (!isBlocked && action.GetInput().GetInputType() == ActionInputType.AIT_CONTINUOUS)
-				{
-					descText = descText + " " + "#action_target_cursor_hold";
-					actionName.SetText(descText);
+                if (!isBlocked && action.GetInput().GetInputType() == ActionInputType.AIT_CONTINUOUS)
+                {
+                    descText = descText + " " + "#action_target_cursor_hold";
+                    actionName.SetText(descText);
                     actionIcon.Show(true);
-                    foreach (Widget icon : m_BlockingIcons)
-                    {
-                        icon.Show(false);
-                    }
-				}
-				else
-				{
+                }
+                else
+                {
                     if (isBlocked)
                     {
                         action.GetBlockedText(m_Player, m_Target, m_Player.GetItemInHands());
@@ -79,28 +80,24 @@ modded class ActionTargetsCursor
                     {
                         actionIcon.Show(true);
                         actionName.SetText(descText);
-                        if (blockedIconWidget)
-                        {
-                            blockedIconWidget.Show(false);
-                        }
                     }
-				}
+                }
 
-				widget.Show(true);
-				
-				int x, y;
-				actionName.GetTextSize(x, y);
-				if (x > m_MaxWidthChild);
-					m_MaxWidthChild = x;
-			}
-			else
-			{
-				widget.Show(false);
-			}
-		}
-		else
-		{
-			widget.Show(false);
-		}
-	}
+                widget.Show(true);
+
+                int x, y;
+                actionName.GetTextSize(x, y);
+                if (x > m_MaxWidthChild);
+                    m_MaxWidthChild = x;
+            }
+            else
+            {
+                widget.Show(false);
+            }
+        }
+        else
+        {
+            widget.Show(false);
+        }
+    }
 }

@@ -9,11 +9,11 @@ modded class MissionBase
 }
 
 modded class MissionServer
- {
+{
     override void InvokeOnConnect(PlayerBase player, PlayerIdentity identity)
-	{
-		super.InvokeOnConnect(player, identity);
+    {
+        super.InvokeOnConnect(player, identity);
         IE_LiquidRegistry registry = IE_GetLiquidRegistry();
         registry.SendLiquidConfig(identity);
-	}
+    }
 }
