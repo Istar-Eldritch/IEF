@@ -1,4 +1,4 @@
-ref IE_Log IEF_LOG;
+ref IE_Log IEF_LOG = new IE_Log("IEF", IE_LogLevel.TRACE);
 
 enum IE_LogLevel
 {

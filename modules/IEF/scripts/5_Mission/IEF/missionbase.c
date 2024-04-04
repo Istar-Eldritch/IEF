@@ -2,9 +2,13 @@ modded class MissionBase
 {
     void MissionBase()
     {
-        IEF_LOG = new IE_Log("IEF", IE_LogLevel.INFO);
         IE_LiquidRegistry registry = IE_GetLiquidRegistry();
         GetRPCManager().AddRPC("IEF", "UpdateLiquidConfigRPC", registry, SingleplayerExecutionType.Both);
+        IEF_LOG.Info("Initialized");
+		if (GetGame().IsServer())
+		{
+			IEF_Metrics.ReportServerStarted();
+		}
     }
 }
 

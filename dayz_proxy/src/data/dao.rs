@@ -4,7 +4,7 @@ use uuid::Uuid;
 #[derive(FromRow)]
 pub struct Application
 {
-    pub token: Uuid,
+    pub id: Uuid,
 }
 
 impl Application
@@ -12,7 +12,7 @@ impl Application
     pub async fn find_by_token<'a>(ex: impl Executor<'a, Database = Postgres>, token: Uuid) -> Result<Option<Application>, sqlx::error::Error> {
 
         let user = sqlx::query_as(r#"
-            select *
+            select id
             from applications
             where token = $1
         "#)
