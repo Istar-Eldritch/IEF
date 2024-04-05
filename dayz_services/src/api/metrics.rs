@@ -19,6 +19,7 @@ pub struct ServerStartedWithModMetric
     time: DateTime<Utc>,
     #[influxdb(tag)]
     app_name: String,
+    #[influxdb(tag)]
     server_ip: String,
     repacked: bool
 }
