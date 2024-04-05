@@ -1,4 +1,4 @@
-ref IE_ModMetrics IEF_Metrics = new IE_ModMetrics("IEF", "http://localhost", "b1a3e440-8285-4b5e-a1a4-8780543a24de");
+ref IE_ModMetrics IEF_Metrics = new IE_ModMetrics("IEF", "https://dayz-services.eldritchist.dev", "c05330f2-931b-4ff3-974f-eecd92afad0e");
 
 class IE_MetricRequest<Class T> {
     string token;

@@ -18,6 +18,7 @@ pub struct ServerStartedWithModMetric
 {
     time: DateTime<Utc>,
     #[influxdb(tag)]
+    app_name: String,
     server_ip: String,
     repacked: bool
 }
@@ -76,14 +77,14 @@ pub async fn metric_handler(
     if let Some(app) = app {
         let time = Utc::now();
         let server_ip: String = conn_info.realip_remote_addr().unwrap_or_default().into();
-        let app_id = app.id.to_string();
         match body.metric {
             Metric::ServerStarted { repacked } => {
-                let client = Client::new(&data.influxdb_uri, &app_id).with_token(&data.influxdb_token);
+                let client = Client::new(&data.influxdb_uri, &format!("{}_mods", &app.user_name)).with_token(&data.influxdb_token);
                 let metric = ServerStartedWithModMetric
                 {
                     time,
                     server_ip,
+                    app_name: app.app_name,
                     repacked: repacked == 1
                 };
 
