@@ -1,5 +1,5 @@
 [package]
-name = "dayz_proxy"
+name = "dayz_services"
 version = "0.1.0"
 edition = "2021"
 

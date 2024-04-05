@@ -16,7 +16,7 @@ struct Args {
     #[arg(long, env = "INFLUXDB_TOKEN")]
     influxdb_token: String,
     /// Name of the person to greet
-    #[arg(short, long, env = "LOG_LEVEL", default_value = "dayz_proxy=info")]
+    #[arg(short, long, env = "LOG_LEVEL", default_value = "dayz_services=info")]
     log_level: String,
 }
 
