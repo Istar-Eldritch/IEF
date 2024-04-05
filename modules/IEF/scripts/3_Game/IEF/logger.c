@@ -1,4 +1,9 @@
+#ifdef DIAG_DEVELOPER
 ref IE_Log IEF_LOG = new IE_Log("IEF", IE_LogLevel.TRACE);
+#endif
+#ifndef DIAG_DEVELOPER
+ref IE_Log IEF_LOG = new IE_Log("IEF", IE_LogLevel.INFO);
+#endif
 
 enum IE_LogLevel
 {
