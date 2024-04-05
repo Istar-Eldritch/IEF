@@ -15,7 +15,7 @@ modded class ActionTargetsCursor
         m_ActionTypes.Insert("single");
         m_ActionTypes.Insert("continuous");
 
-        CreateBlockingIcons("IE/Framework/data/layouts/ie_framework_blocked_icon.layout", "btn_icon_blocked");
+        CreateBlockingIcons("IEF/data/layouts/ie_framework_blocked_icon.layout", "btn_icon_blocked");
     }
 
     protected void CreateBlockingIcons(string layout, string name)
