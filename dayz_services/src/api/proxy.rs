@@ -49,6 +49,7 @@ impl actix_web::error::ResponseError for ProxyError {
 #[post("/proxy")]
 pub async fn proxy_handler(
     data: web::Data<AppState>,
+    conn_info: actix_web::dev::ConnectionInfo,
     body: web::Json<ProxyRequest>,
 ) -> Result<impl Responder, ProxyError> {
     let app = Application::find_by_token(&data.pg, body.token)
@@ -58,7 +59,7 @@ pub async fn proxy_handler(
             ProxyError::InternalError
         })?;
 
-    if let Some(_) = app {
+    if let Some(app) = app {
         let method = &body.method.clone().try_into_bytes().map_err(|e| {
             log::error!("Error parsing method: {:?}", e);
             ProxyError::InternalError
@@ -108,8 +109,11 @@ pub async fn proxy_handler(
             ProxyError::InternalError
         })?;
 
+        log::debug!("Routed trafic from {} to {}", app.app_name, &body.url);
         Ok(response_builder.body(res_body))
     } else {
+        let server_ip: String = conn_info.realip_remote_addr().unwrap_or_default().into();
+        log::warn!("Unauthorized access from: {}", server_ip);
         Err(ProxyError::Unauthorized)
     }
 }

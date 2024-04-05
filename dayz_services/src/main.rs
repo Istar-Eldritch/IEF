@@ -1,10 +1,14 @@
 mod api;
 mod data;
+use std::str::FromStr;
+
 use crate::api::AppState;
 use actix_web::{web, App, HttpServer};
 use clap::Parser;
+use log::LevelFilter;
 use reqwest::Client;
 use sqlx::postgres::PgPoolOptions;
+use env_logger::Builder;
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
@@ -15,17 +19,19 @@ struct Args {
     influxdb_uri: String,
     #[arg(long, env = "INFLUXDB_TOKEN")]
     influxdb_token: String,
-    /// Name of the person to greet
-    #[arg(short, long, env = "LOG_LEVEL", default_value = "dayz_services=info")]
+    #[arg(long, env = "LOG_LEVEL", default_value = "info")]
     log_level: String,
+    #[arg(long, env = "LOG_FILTER", default_value = "dayz_services")]
+    log_filter: String,
 }
 
 #[actix_web::main]
 async fn main() -> Result<(), impl std::error::Error> {
     let args = Args::parse();
 
-    std::env::set_var("RUST_LOG", args.log_level);
-    env_logger::init();
+    Builder::new()
+        .filter(Some(&args.log_filter), LevelFilter::from_str(&args.log_level).unwrap_or(LevelFilter::Info))
+        .init();
 
     let pool = PgPoolOptions::new()
         .max_connections(5)
