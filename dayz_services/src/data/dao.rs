@@ -19,7 +19,7 @@ impl Application
                 users.name as user_name
             from applications
             inner join users on users.id = applications.user_id
-            where app.token = $1
+            where applications.token = $1
         "#)
         .bind(token)
         .fetch_optional(ex).await?;
