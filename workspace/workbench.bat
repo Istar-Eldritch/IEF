@@ -3,7 +3,7 @@ call vars.bat
 
 setlocal enabledelayedexpansion
 
-set "mod=P:\JM\CF\Scripts;P:\JM\COT\Scripts;P:\IE\Framework"
+set "mod=P:\JM\CF\Scripts;P:\JM\COT\Scripts"
 
 FOR /D %%i IN (..\modules\*) DO (
     set filename=%%~ni
