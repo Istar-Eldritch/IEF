@@ -18,6 +18,17 @@ modded class ActionTargetsCursor
         CreateBlockingIcons("IEF/data/layouts/ie_framework_blocked_icon.layout", "btn_icon_blocked");
     }
 
+    // Some mods override the layout and causes a crash on this function. This override just checks the widgets are not null.
+    override protected void SetControllerIcon(string pWidgetName, string pInputName)
+    {
+        if (m_Root)
+        {
+            RichTextWidget w = RichTextWidget.Cast(m_Root.FindAnyWidget(pWidgetName + "_btn_icon_xbox"));
+            if (w)
+                w.SetText(InputUtils.GetRichtextButtonIconFromInputAction(pInputName, "", EUAINPUT_DEVICE_CONTROLLER));
+        }
+    }
+
     protected void CreateBlockingIcons(string layout, string name)
     {
         foreach (string action : m_ActionTypes)
@@ -68,8 +79,8 @@ modded class ActionTargetsCursor
                 {
                     if (isBlocked)
                     {
-                        string txt = action.GetBlockedText(m_Player, m_Target, m_Player.GetItemInHands());
-                        actionName.SetText(txt);
+                        action.GetBlockedText(m_Player, m_Target, m_Player.GetItemInHands());
+                        actionName.SetText(action.GetBlockedText(m_Player, m_Target, m_Player.GetItemInHands()));
                         actionIcon.Show(false);
                         if (blockedIconWidget)
                         {
