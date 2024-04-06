@@ -68,8 +68,8 @@ modded class ActionTargetsCursor
                 {
                     if (isBlocked)
                     {
-                        action.GetBlockedText(m_Player, m_Target, m_Player.GetItemInHands());
-                        actionName.SetText(action.GetBlockedText(m_Player, m_Target, m_Player.GetItemInHands()));
+                        string txt = action.GetBlockedText(m_Player, m_Target, m_Player.GetItemInHands());
+                        actionName.SetText(txt);
                         actionIcon.Show(false);
                         if (blockedIconWidget)
                         {
