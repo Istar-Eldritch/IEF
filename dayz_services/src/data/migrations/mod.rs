@@ -3,6 +3,7 @@
 */
 
 mod m000_initial_tables;
+mod m001_player_table;
 use async_trait::async_trait;
 
 use chrono::Utc;
@@ -10,7 +11,7 @@ use log::info;
 use sqlx::{Transaction, PgPool, Postgres};
 
 use m000_initial_tables::InitialTables;
-
+use m001_player_table::PlayersTable;
 /// This trait is used by `run_migrations` to run the pending migrations and
 /// it must be implemented by all new migrations.
 #[async_trait]
@@ -45,7 +46,7 @@ async fn add_migration(
 /// This contains all the migrations that the system will check and run on startup
 /// New migrations must be added to this array for them to take effect.
 /// Always add new migrations to the tail of the array, `run_migrations` does not currently sort this array before exiting the migrations
-const MIGRATIONS: [&dyn Migration; 1] = [&InitialTables];
+const MIGRATIONS: [&dyn Migration; 2] = [&InitialTables, &PlayersTable];
 
 /// Runs all pending migrations.
 ///
