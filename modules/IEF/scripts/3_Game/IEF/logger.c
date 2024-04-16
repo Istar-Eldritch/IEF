@@ -53,7 +53,8 @@ class IE_Log
     {
         if (m_level <= IE_LogLevel.TRACE)
         {
-            m_output.write("[" + m_name + "] [TRACE] " + msg);
+            string time = CF_Date.Now(true).Format("YYYY-MM-DD hh:mm:ss");
+            m_output.write("["+ time + "] [" + m_name + "] [TRACE] " + msg);
         }
     }
 
@@ -61,7 +62,8 @@ class IE_Log
     {
         if (m_level <= IE_LogLevel.DEBUG)
         {
-            m_output.write("[" + m_name + "] [DEBUG] " + msg);
+            string time = CF_Date.Now(true).Format("YYYY-MM-DD hh:mm:ss");
+            m_output.write("["+ time + "] [" + m_name + "] [DEBUG] " + msg);
         }
     }
 
@@ -69,7 +71,8 @@ class IE_Log
     {
         if (m_level <= IE_LogLevel.INFO)
         {
-            m_output.write("[" + m_name + "] [INFO] " + msg);
+            string time = CF_Date.Now(true).Format("YYYY-MM-DD hh:mm:ss");
+            m_output.write("["+ time + "] [" + m_name + "] [INFO] " + msg);
         }
     }
 
@@ -77,7 +80,8 @@ class IE_Log
     {
         if (m_level <= IE_LogLevel.WARN)
         {
-            m_output.write("[" + m_name + "] [WARN] " + msg);
+            string time = CF_Date.Now(true).Format("YYYY-MM-DD hh:mm:ss");
+            m_output.write("["+ time + "] [" + m_name + "] [WARN] " + msg);
         }
     }
 
@@ -85,7 +89,8 @@ class IE_Log
     {
         if (m_level <= IE_LogLevel.ERROR)
         {
-            m_output.write("[" + m_name + "] [ERROR] " + msg);
+            string time = CF_Date.Now(true).Format("YYYY-MM-DD hh:mm:ss");
+            m_output.write("["+ time + "] [" + m_name + "] [ERROR] " + msg);
         }
     }
 }
