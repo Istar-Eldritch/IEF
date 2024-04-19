@@ -17,6 +17,11 @@ class IE_Cmp<Class T>
 	{
 		return IE_CmpRes.Eq;
 	}
+	
+	bool eq(T e1, T e2)
+	{
+		return cmp(e1, e2) == IE_CmpRes.Eq;
+	}
 }
 
 class IE_CmpArrayInt : IE_Cmp<array<int>>
@@ -70,19 +75,25 @@ class IE_CmpInt : IE_Cmp<int>
 
 class IE_CmpFloat : IE_Cmp<float>
 {
+	float precission;
+	void IE_CmpFloat(float _precission = 0.0001)
+	{
+		precission = _precission;
+	}
+
 	override IE_CmpRes cmp(float e1, float e2)
 	{
-		if (e1 < e2)
+		if (Math.AbsFloat(e1 - e2) < 0.0001)
+		{
+			return IE_CmpRes.Eq;
+		}
+		else if (e1 < e2)
 		{
 			return IE_CmpRes.Lt;
 		}
-		else if (e1 > e2)
-		{
-			return IE_CmpRes.Gt;
-		}
 		else
 		{
-			return IE_CmpRes.Eq;
+			return IE_CmpRes.Gt;
 		}
 	}
 }
@@ -234,6 +245,42 @@ class IE_ArrayUtils<Class T>
 			arr[i] = temp[i];
 	}
 }
+
+// #define TEST_CMP_UTILS
+
+#ifdef TEST_CMP_UTILS
+class CmpUtilsTests
+{
+	static bool RunTests()
+	{
+		Print("RUNING CMP UTILS TESTS");
+		EqCloseFloats();
+		NEqCloseFloats();
+		Print("FINALISED CMP UTILS TESTS");
+		return true;
+	}
+
+	static void EqCloseFloats()
+	{
+		float f1 = 0.000000001;
+		float f2 = 0.000000002;
+		IE_CmpFloat cmpFloat = new IE_CmpFloat;
+		IE_CmpRes res = cmpFloat.cmp(f1, f2);
+		IE_Assert(res == IE_CmpRes.Eq, "[ERROR] Expected floats to be equal");
+	}
+
+	static void NEqCloseFloats()
+	{
+		float f1 = 0.001;
+		float f2 = 0.002;
+		IE_CmpFloat cmpFloat = new IE_CmpFloat;
+		IE_CmpRes res = cmpFloat.cmp(f1, f2);
+		IE_Assert(res != IE_CmpRes.Eq, "[ERROR] Expected floats to be equal");
+	}
+}
+
+static bool cmpUtilTests = CmpUtilsTests.RunTests();
+#endif
 
 // #define TEST_ARRAY_UTILS
 
